@@ -5,7 +5,7 @@ import { getShoppingCart } from "../../utilities/fakedb";
  * update the quantity of the founded product and push it in a new array. and then return the array of object that contain all the added cart products
  */
 const cartProductsLoader = async () => {
-    const loadedProducts = await fetch('products.json');
+    const loadedProducts = await fetch('http://localhost:5000/products');
     const products = await loadedProducts.json();
     // console.log(products);
 
@@ -13,7 +13,7 @@ const cartProductsLoader = async () => {
     const savedCard = [];
     console.log('storedCard: ', storedCard);
     for (const id in storedCard) {
-        const addedProduct = products.find(product => product.id === id);
+        const addedProduct = products.find(product => product._id === id);
         if (addedProduct) {
             const quantity = storedCard[id];
             addedProduct.quantity = quantity;
