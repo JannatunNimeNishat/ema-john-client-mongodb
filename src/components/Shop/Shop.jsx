@@ -38,14 +38,14 @@ const Shop = () => {
 
     //we can make itemPerPage dynamic. Ny taking a select and take input from user. user will decide how many product he wants to see in a single page 
 
-    const options = [5, 10, 20];
+    const options = [5, 10,15, 20];
     //    const options = [5];
     console.log('totalProducts: ', totalProducts, 'totalPages: ', totalPages);
 
     //change the number of products per page
     function handleSelectChange(event) {
         setItemsPerPage(parseInt(event.target.value))
-        setCurrentPage(0)                                                                                                                                                                                                                                                                                                                        
+        setCurrentPage(0)
     }
 
 
@@ -53,17 +53,28 @@ const Shop = () => {
      * DONE: 1. Determine total number of items.
      * TODO: 2. Decide the number of items per page.
      * DONE: 3. Calculate the total number of pages.
-     *       4. create button dynamically for the pagination using the total pages
+     *       4. Determine the current page
      * 
      * 
      */
 
 
+    /*     useEffect(() => {
+            fetch('http://localhost:5000/products')
+                .then(res => res.json())
+                .then(data => setProducts(data))
+        }, []); */
+
+    //load data based on current page (pagination)
     useEffect(() => {
-        fetch('http://localhost:5000/products')
-            .then(res => res.json())
-            .then(data => setProducts(data))
-    }, []);
+        async function fetchData() {
+            const response = await fetch(`http://localhost:5000/products?page=${currentPage}&limit=${itemsPerPage}` );
+            const data = await response.json()
+            setProducts(data)
+        }
+        fetchData()
+    }, [currentPage,itemsPerPage])
+
 
     useEffect(() => {
         const storedCart = getShoppingCart();
@@ -146,7 +157,7 @@ const Shop = () => {
                     </button>)
                 }
                 {/* user will decide how many product he wants to see in a single page  */}
-              
+
                 <select value={itemsPerPage} onChange={handleSelectChange}>
                     {
                         /*  options.map(option => {
